@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Néstor Kelly Edge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111827;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #00ffaa;
+      text-align: center;
+    }
+    h2, h3 {
+      margin-bottom: 0.5rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .box, .section, .bet-box {
+      background-color: #1f2937;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 0 10px #0006;
+      margin-bottom: 2rem;
+    }
+    .section {
+      border: 2px solid #00ffaa;
+      padding: 2rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 4px;
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 8px;
+      background-color: #374151;
+      border: 1px solid #4b5563;
+      border-radius: 6px;
+      color: white;
+    }
+    .resultado, .result-box {
+      margin-top: 8px;
+      font-weight: bold;
+      background-color: #121212;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid #00ffaa;
+    }
+    .green { color: #4ade80; }
+    .red { color: #f87171; }
+    .yellow { color: #facc15; }
+    .highlight { color: #00ffaa; font-weight: bold; }
+    .no-bet { color: #ff5555; }
+    button {
+      margin-top: 1rem;
+      background-color: #00ffaa;
+      color: #000;
+      font-weight: bold;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00ddaa;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .input-box {
+      flex: 1;
+      min-width: 160px;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <h1>Calculadora Kelly Apuestas</h1>
+
+  <!-- Soccer Section -->
+  <label>Capital disponible ($):</label>
+  <input id="bank" type="number" value="500" />
+
+  <div class="grid">
+    <div class="box">
+      <h2>Moneyline</h2>
+      <label>Probabilidad estimada (%):</label>
+      <input id="ml-prob" type="number" value="50" />
+      <label>Momio Local:</label>
+      <input id="ml-local" type="number" value="-115" />
+      <label>Momio Empate:</label>
+      <input id="ml-draw" type="number" value="+250" />
+      <label>Momio Visitante:</label>
+      <input id="ml-visit" type="number" value="+300" />
+      <div id="ml-res" class="resultado"></div>
+    </div>
+
+    <div class="box">
+      <h2>Over / Under</h2>
+      <label>Probabilidad estimada (%):</label>
+      <input id="ou-prob" type="number" value="50" />
+      <label>Over +2.5 Momio:</label>
+      <input id="ou-over" type="number" value="+110" />
+      <label>Under +2.5 Momio:</label>
+      <input id="ou-under" type="number" value="-140" />
+      <div id="ou-res" class="resultado"></div>
+    </div>
+
+    <div class="box">
+      <h2>Hándicap Alternativo</h2>
+      <label>Probabilidad estimada (%):</label>
+      <input id="ha-prob" type="number" value="50" />
+      <label>Hándicap Local -1.5:</label>
+      <input id="ha-local" type="number" value="+150" />
+      <label>Hándicap Visitante +0.5:</label>
+      <input id="ha-visit" type="number" value="-110" />
+      <div id="ha-res" class="resultado"></div>
+    </div>
+
+    <div class="box">
+      <h2>Doble Oportunidad</h2>
+      <label>Probabilidad estimada (%):</label>
+      <input id="do-prob" type="number" value="50" />
+      <label>Local o Empate:</label>
+      <input id="do-le" type="number" value="-200" />
+      <label>Local o Visitante:</label>
+      <input id="do-lv" type="number" value="-150" />
+      <label>Empate o Visitante:</label>
+      <input id="do-ev" type="number" value="+100" />
+      <div id="do-res" class="resultado"></div>
+    </div>
+  </div>
+
+  <!-- NFL Section -->
+  <div class="section">
+    <h2>NFL - Apuestas</h2>
+
+    <div class="row">
+      <div class="input-box">
+        <label for="bank">Capital ($)</label>
+        <input type="number" id="bank" value="500">
+      </div>
+    </div>
+
+    <h3>NFL - Moneyline</h3>
+    <div class="row">
+      <div class="input-box"><label>Probabilidad estimada (%)</label><input type="number" id="nflProb" value="33.33"></div>
+      <div class="input-box"><label>Local (momio)</label><input type="number" id="nflMl1" value="-115"></div>
+      <div class="input-box"><label>Empate (momio)</label><input type="number" id="nflMl2" value="+250"></div>
+      <div class="input-box"><label>Visitante (momio)</label><input type="number" id="nflMl3" value="+300"></div>
+    </div>
+    <button onclick="calcularNFL_ML()">Calcular Moneyline</button>
+    <div id="resNFL_ML" class="result-box"></div>
+
+    <h3>NFL - Over / Under</h3>
+    <div class="box">
+      <div class="row">
+        <div class="input-box"><label>Over - Prob. estimada (%)</label><input type="number" id="nflOUProbOver" value="50"></div>
+        <div class="input-box"><label>Over (momio)</label><input type="number" id="nflOUOver" value="-110"></div>
+      </div>
+      <div class="row">
+        <div class="input-box"><label>Under - Prob. estimada (%)</label><input type="number" id="nflOUProbUnder" value="50"></div>
+        <div class="input-box"><label>Under (momio)</label><input type="number" id="nflOUUnder" value="-110"></div>
+      </div>
+      <button onclick="calcularNFL_OU()">Calcular Over/Under</button>
+      <div id="resNFL_OU" class="result-box"></div>
+    </div>
+
+    <h3>NFL - Spread</h3>
+    <div class="box">
+      <div class="row">
+        <div class="input-box"><label>Local - Spread</label><input type="text" id="nflSpreadLocal" placeholder="-3.5"></div>
+        <div class="input-box"><label>Momio Local</label><input type="number" id="nflSpreadMomioLocal" value="+100"></div>
+        <div class="input-box"><label>Prob. estimada Local (%)</label><input type="number" id="nflSpreadProbLocal" value="50"></div>
+      </div>
+      <div class="row">
+        <div class="input-box"><label>Visitante + Spread</label><input type="text" id="nflSpreadVisitante" placeholder="+3.5"></div>
+        <div class="input-box"><label>Momio Visitante</label><input type="number" id="nflSpreadMomioVisitante" value="-110"></div>
+        <div class="input-box"><label>Prob. estimada Visitante (%)</label><input type="number" id="nflSpreadProbVisitante" value="50"></div>
+      </div>
+      <button onclick="calcularNFL_Spread()">Calcular Spread</button>
+      <div id="resNFL_Spread" class="result-box"></div>
+    </div>
+  </div>
+
+  <script>
+    function momioAProbabilidad(momio) {
+      return momio > 0 ? 100 / (momio + 100) : Math.abs(momio) / (Math.abs(momio) + 100);
+    }
+    function momioADecimal(momio) {
+      return momio > 0 ? (momio / 100 + 1) : (100 / Math.abs(momio) + 1);
+    }
+    function calcularKelly(bank, prob, momio) {
+      const p = prob / 100;
+      const dec = momioADecimal(momio);
+      const kelly = ((dec * p - 1) / (dec - 1));
+      const stake = kelly > 0 ? kelly * bank : 0;
+      return {
+        kelly: kelly > 0 ? (kelly * 100).toFixed(2) + '%' : 'No apostar',
+        stake: kelly > 0 ? '$' + stake.toFixed(2) : '$--',
+        probImp: (momioAProbabilidad(momio) * 100).toFixed(2) + '%'
+      };
+    }
+
+    function calcularNFL_ML() {
+      const bank = parseFloat(document.getElementById('bank').value);
+      const prob = parseFloat(document.getElementById('nflProb').value);
+      const momios = [
+        parseFloat(document.getElementById('nflMl1').value),
+        parseFloat(document.getElementById('nflMl2').value),
+        parseFloat(document.getElementById('nflMl3').value)
+      ];
+      const labels = ['Local', 'Empate', 'Visitante'];
+      let html = '';
+      momios.forEach((momio, i) => {
+        const r = calcularKelly(bank, prob, momio);
+        html += `<p><span class='highlight'>${labels[i]}</span> | Momio: ${momio} | Prob. Implícita: ${r.probImp} | Kelly: <span class='${r.kelly === 'No apostar' ? 'no-bet' : 'highlight'}'>${r.kelly}</span> | Stake: ${r.stake}</p>`;
+      });
+      document.getElementById('resNFL_ML').innerHTML = html;
+    }
+
+    function calcularNFL_OU() {
+      const bank = parseFloat(document.getElementById('bank').value);
+      const probOver = parseFloat(document.getElementById('nflOUProbOver').value);
+      const probUnder = parseFloat(document.getElementById('nflOUProbUnder').value);
+      const momioOver = parseFloat(document.getElementById('nflOUOver').value);
+      const momioUnder = parseFloat(document.getElementById('nflOUUnder').value);
+      const r1 = calcularKelly(bank, probOver, momioOver);
+      const r2 = calcularKelly(bank, probUnder, momioUnder);
+      document.getElementById('resNFL_OU').innerHTML = `
+        <p><span class='highlight'>Over</span> | Momio: ${momioOver} | Prob. Implícita: ${r1.probImp} | Kelly: <span class='${r1.kelly === 'No apostar' ? 'no-bet' : 'highlight'}'>${r1.kelly}</span> | Stake: ${r1.stake}</p>
+        <p><span class='highlight'>Under</span> | Momio: ${momioUnder} | Prob. Implícita: ${r2.probImp} | Kelly: <span class='${r2.kelly === 'No apostar' ? 'no-bet' : 'highlight'}'>${r2.kelly}</span> | Stake: ${r2.stake}</p>`;
+    }
+
+    function calcularNFL_Spread() {
+      const bank = parseFloat(document.getElementById('bank').value);
+      const probLocal = parseFloat(document.getElementById('nflSpreadProbLocal').value);
+      const momioLocal = parseFloat(document.getElementById('nflSpreadMomioLocal').value);
+      const probVisitante = parseFloat(document.getElementById('nflSpreadProbVisitante').value);
+      const momioVisitante = parseFloat(document.getElementById('nflSpreadMomioVisitante').value);
+
+      const r1 = calcularKelly(bank, probLocal, momioLocal);
+      const r2 = calcularKelly(bank, probVisitante, momioVisitante);
+
+      document.getElementById('resNFL_Spread').innerHTML = `
+        <p><span class='highlight'>Local - Spread</span> | Prob. Implícita: ${r1.probImp} | Kelly: <span class='${r1.kelly === 'No apostar' ? 'no-bet' : 'highlight'}'>${r1.kelly}</span> | Stake: ${r1.stake}</p>
+        <p><span class='highlight'>Visitante + Spread</span> | Prob. Implícita: ${r2.probImp} | Kelly: <span class='${r2.kelly === 'No apostar' ? 'no-bet' : 'highlight'}'>${r2.kelly}</span> | Stake: ${r2.stake}</p>`;
+    }
+
+    // Inicializar soccer
+    window.onload = () => document.querySelectorAll("input").forEach(e => e.dispatchEvent(new Event("input")));
+    document.querySelectorAll("input").forEach(i => i.addEventListener("input", () => {
+      mostrarResultados("ml-res", { prob: "ml-prob", valores: { "Local": "ml-local", "Empate": "ml-draw", "Visitante": "ml-visit" } });
+      mostrarResultados("ou-res", { prob: "ou-prob", valores: { "Over": "ou-over", "Under": "ou-under" } });
+      mostrarResultados("ha-res", { prob: "ha-prob", valores: { "Local -1.5": "ha-local", "Visitante +0.5": "ha-visit" } });
+      mostrarResultados("do-res", { prob: "do-prob", valores: { "Local o Empate": "do-le", "Local o Visitante": "do-lv", "Empate o Visitante": "do-ev" } });
+    }));
+
+    function mostrarResultados(seccion, inputs) {
+      const bank = parseFloat(document.getElementById("bank").value);
+      const prob = document.getElementById(inputs.prob).value;
+      let html = "";
+      for (const campo in inputs.valores) {
+        const momio = document.getElementById(inputs.valores[campo]).value;
+        const r = calcularKelly(bank, prob, momio);
+        html += `<p><span class="yellow">${campo}</span>: Prob. Implícita: <span class="green">${r.probImp}</span> | Kelly: <span class="${r.kelly === 'No apostar' ? 'red' : 'green'}">${r.kelly}</span> | Stake: <span class="${r.kelly === 'No apostar' ? 'red' : 'green'}">${r.stake}</span></p>`;
+      }
+      document.getElementById(seccion).innerHTML = html;
+    }
+  </script>
+</body>
+</html>
+
+
